@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>万圣节快乐</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: #1a0f33;
+            overflow: hidden;
+            position: relative;
+            font-family: "Arial", sans-serif;
+        }
+        /* 初始全屏弹窗 */
+        .initial-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff7a00, #ff3d00);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .initial-title {
+            font-size: 40px;
+            color: white;
+            margin-bottom: 25px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .initial-content {
+            font-size: 18px;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 300px;
+            line-height: 1.8;
+        }
+        .start-btn {
+            padding: 14px 40px;
+            background: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            color: #ff5722;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+        /* 漂浮祝福弹窗 */
+        .float-popup {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            max-width: 220px;
+            animation: float 6s ease-in-out infinite, fadeIn 0.5s ease-out;
+            z-index: 999;
+        }
+        .float-content {
+            color: #d32f2f;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .float-emoji {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+        /* 背景装饰 */
+        .bg-icon {
+            position: absolute;
+            opacity: 0.2;
+            pointer-events: none;
+            animation: slowFloat 15s linear infinite;
+        }
+        /* 动画 */
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slowFloat {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 初始弹窗 -->
+    <div class="initial-popup" id="initialPopup">
+        <div class="initial-title">🎃 万圣节快乐 🎃</div>
+        <div class="initial-content">
+            点击下方按钮<br>
+            接收你的专属万圣节祝福
+        </div>
+        <button class="start-btn" onclick="startFloating()">开始接收</button>
+    </div>
+
+    <script>
+        // 生成背景漂浮元素（南瓜、幽灵等）
+        const bgIcons = ['🎃', '👻', '🕷️', '🦇', '💀', '🕸️', '😈', '🙀'];
+        function createBgIcons() {
+            setInterval(() => {
+                const icon = document.createElement('div');
+                icon.className = 'bg-icon';
+                icon.textContent = bgIcons[Math.floor(Math.random() * bgIcons.length)];
+                icon.style.left = `${Math.random() * 100}vw`;
+                icon.style.top = '100vh';
+                icon.style.fontSize = `${Math.random() * 40 + 20}px`;
+                icon.style.animationDuration = `${Math.random() * 15 + 10}s`;
+                document.body.appendChild(icon);
+                // 移除超出屏幕的元素
+                setTimeout(() => icon.remove(), 25000);
+            }, 800);
+        }
+
+        // 祝福内容列表
+        const wishes = [
+            "不给糖就捣蛋！祝你收获满袋甜蜜～",
+            "南瓜灯照亮你的路，万圣节快乐！",
+            "幽灵在对你笑，那是好运的信号～",
+            "今晚做个开心鬼，烦恼全吓跑！",
+            "万圣节的魔法，让快乐停不下来～",
+            "蜘蛛网上挂满了我的祝福哦！",
+            "蝙蝠飞过，带来万圣节的惊喜～",
+            "骷髅头也在为你庆祝，节日快乐！",
+            "今晚的糖果，都是给勇敢的你的～",
+            "万圣节狂欢，做最酷的捣蛋鬼！"
+        ];
+        const emojis = ['🎃', '👻', '🕷️', '🦇', '💀', '😈'];
+
+        // 创建漂浮弹窗
+        function createFloatPopup() {
+            const popup = document.createElement('div');
+            popup.className = 'float-popup';
+            const wish = wishes[Math.floor(Math.random() * wishes.length)];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            popup.innerHTML = `<div class="float-content"><span class="float-emoji">${emoji}</span>${wish}</div>`;
+            
+            // 随机位置（确保在屏幕内）
+            const maxX = window.innerWidth - 240;
+            const x = Math.random() * maxX;
+            const y = Math.random() * (window.innerHeight - 120);
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+            
+            // 随机动画延迟和大小
+            popup.style.animationDelay = `${Math.random() * 3}s`;
+            popup.style.transform = `scale(${Math.random() * 0.2 + 0.9})`;
+            
+            document.body.appendChild(popup);
+        }
+
+        // 开始漂浮效果
+        function startFloating() {
+            // 隐藏初始弹窗
+            document.getElementById('initialPopup').style.display = 'none';
+            // 创建背景元素
+            createBgIcons();
+            // 定时生成漂浮祝福（0.5-2秒随机间隔）
+            setInterval(() => {
+                createFloatPopup();
+            }, Math.random() * 1500 + 500);
+        }
+    </script>
+</body>
+</html>
