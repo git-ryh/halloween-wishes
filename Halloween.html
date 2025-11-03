@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>万圣节快乐</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* 背景样式：深色+漂浮万圣节元素 */
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: #0f0a1e;
+            overflow: hidden;
+            position: relative;
+            font-family: "Arial", sans-serif;
+        }
+        /* 漂浮节日元素（南瓜、幽灵等） */
+        .bg-icon {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 165, 0, 0.7);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        /* 主弹窗样式：居中全屏，带渐变和阴影 */
+        .halloween-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff6b35, #d92b2b);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: popIn 0.8s ease-out;
+        }
+        /* 弹窗标题+表情 */
+        .popup-title {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        /* 祝福内容 */
+        .popup-content {
+            font-size: 18px;
+            color: white;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 350px;
+        }
+        /* 关闭按钮 */
+        .close-btn {
+            padding: 12px 30px;
+            background: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            color: #ff6b35;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        /* 弹窗弹出动画 */
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        /* 背景元素漂浮动画 */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        /* 第二个弹窗（关闭第一个后弹出） */
+        .second-popup {
+            display: none;
+            animation: popIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- 主弹窗（打开链接先显示） -->
+    <div class="halloween-popup" id="mainPopup">
+        <div class="popup-title">🎃 万圣节快乐 🎃</div>
+        <div class="popup-content">
+            不给糖就捣蛋！<br>
+            愿你今晚被南瓜灯照亮，<br>
+            收获满口袋的甜蜜与惊喜～
+        </div>
+        <button class="close-btn" onclick="showSecondPopup()">下一个祝福</button>
+    </div>
+
+    <!-- 第二个弹窗（关闭主弹窗后显示） -->
+    <div class="halloween-popup second-popup" id="secondPopup">
+        <div class="popup-title">👻 幽灵来送福 👻</div>
+        <div class="popup-content">
+            今晚别害怕黑影，<br>
+            那是鬼怪在给你比心～<br>
+            万圣节狂欢，快乐不停！
+        </div>
+        <button class="close-btn" onclick="closeAllPopups()">收下祝福</button>
+    </div>
+
+    <script>
+        // 1. 生成背景漂浮的万圣节元素（南瓜、幽灵等）
+        const icons = ['🎃', '👻', '🕷️', '🦇', '💀', '🕸️', '😈', '🙀'];
+        const iconCount = 15; // 元素数量
+        for (let i = 0; i < iconCount; i++) {
+            const icon = document.createElement('div');
+            icon.className = 'bg-icon';
+            icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+            // 随机位置
+            icon.style.left = `${Math.random() * 100}vw`;
+            icon.style.top = `${Math.random() * 100}vh`;
+            // 随机大小和动画延迟
+            icon.style.fontSize = `${Math.random() * 20 + 16}px`;
+            icon.style.animationDelay = `${Math.random() * 5}s`;
+            document.body.appendChild(icon);
+        }
+
+        // 2. 弹窗切换逻辑（模拟视频中多弹窗效果）
+        function showSecondPopup() {
+            document.getElementById('mainPopup').style.display = 'none';
+            document.getElementById('secondPopup').style.display = 'flex';
+        }
+
+        // 3. 关闭所有弹窗（显示背景）
+        function closeAllPopups() {
+            document.getElementById('secondPopup').style.display = 'none';
+            // 可选：关闭后3秒再自动弹出一个小弹窗
+            setTimeout(() => {
+                alert('🎃 万圣节快乐！记得吃糖果哦～');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
